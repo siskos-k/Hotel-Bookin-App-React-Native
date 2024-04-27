@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import { Rating } from 'react-native-elements';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const hardcodedRatings = [
   {
@@ -18,6 +19,28 @@ const hardcodedRatings = [
 
 const HotelDetails = ({ route }) => {
   const { hotel } = route.params;
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const renderDatePicker = () => {
+    return (
+      <>
+        <Text style={styles.dateLabel}>Start Date:</Text>
+        <DateTimePicker
+          mode="date" 
+          value={startDate}
+          onChange={(event, selectedDate) => handleDateChange(event, selectedDate, true)}
+        />
+
+        <Text style={styles.dateLabel}>End Date:</Text>
+        <DateTimePicker
+          mode="date" 
+          value={endDate}
+          onChange={(event, selectedDate) => handleDateChange(event, selectedDate, false)}
+        />
+      </>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -38,6 +61,11 @@ const HotelDetails = ({ route }) => {
           </View>
         </View>
       ))}
+         <View style={styles.datePickerContainer}>
+        <Button title="Select Dates" onPress={() => setShowDatePicker(true)} />
+        {showDatePicker && renderDatePicker()}
+      </View>
+
       <Button title="Book Now" onPress={() => alert('Booking in progress!')} />
     </View>
   );
@@ -102,6 +130,16 @@ const styles = StyleSheet.create({
   comment: {
     fontSize: 14,
   },
+  datePickerContainer: {
+    marginBottom: 15,
+    alignItems: 'center', // Center the button
+  },
+  bookNowButton: {
+    backgroundColor: '#3366CC', // Blue background
+    color: 'white', // White Text
+    padding: 15,
+    borderRadius: 10,
+  }
 });
 
 export default HotelDetails;
